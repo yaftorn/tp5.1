@@ -1,0 +1,102 @@
+{extend name="base"}
+{block name="title"}{$title}{/block}
+{block name="main"}
+<div class="container" id="container">
+    <div class="container-wrap">
+        <div class="home-panel">
+            <div class="info-container clear">
+                <div class="vip-info">
+                    <div class="info-item">
+                        <div class="title-wrap">
+                            <h4 class="title">基本信息</h4>
+                        </div>
+                        <div class="info-wrap">
+                            <div class="info-text>" style="margin-bottom: 20px;">
+                                <div class="flex">
+                                    <div class="text-flex">
+                                        <img style="width:100px;height: 100px;" src="img/img1.png" alt="">
+                                        <p class="text"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info-text">
+                                <div class="flex">
+                                    <div class="text-flex">
+                                        <span class="for-text">昵称：</span>
+                                        <p class="text">琳琳</p>
+                                    </div>
+                                    <div class="text-flex">
+                                        <span class="for-text">地址：</span>
+                                        <p class="text">郑州市管城回族区茂祥大厦九楼</p>
+                                    </div>
+                                    <div class="text-flex">
+                                        <span class="for-text">等级：</span>
+                                        <p class="text">
+                                            会员
+                                            <span class="edit">设置</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;黄金会员
+                                            <span class="edit">修改</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex">
+                                    <div class="text-flex">
+                                        <span class="for-text">城市：</span>
+                                        <p class="text">郑州市</p>
+                                    </div>
+                                    <div class="text-flex">
+                                        <span class="for-text">电话：</span>
+                                        <p class="text">178678637983</p>
+                                    </div>
+                                    <div class="text-flex">
+                                        <span class="for-text">分销等级：</span>
+                                        <p class="text">一级</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="title-wrap">
+                            <h4 class="title">推荐客户列表</h4>
+                        </div>
+                        <div class="info-wrap">
+                            <div class="info-table">
+                                <table class="table" id="table"></table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="title-wrap">
+                            <h4 class="title">团队成员</h4>
+                        </div>
+                        <div class="info-wrap">
+                            <div class="info-table">
+                                <table class="table" id="teamtable"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fixed-side">
+            <div class="side-catalog">
+                <div class="side-bar">
+                    <div class="bar-wrap">
+                        <span class="start"></span>
+                        <span class="end"></span>
+                    </div>
+                </div>
+                <dl class="side-list">
+                    <dt>基本信息</dt>
+                    <dt>推荐客户列表</dt>
+                    <dt>团队成员</dt>
+                    <span class="icon-timeBar"></span>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{/block}
+{block name="js"}
+{/block}

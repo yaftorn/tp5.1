@@ -1,0 +1,139 @@
+{extend name="base"}
+{block name="title"}{$title}{/block}
+
+{block name="main"}
+<style>
+    td:first-child
+    {
+        background-color:#f7f7f7;
+    }
+</style>
+<div class="login-data">
+    <p class="text">最近登录时间：{$Think.session.admin.admin_endtime|date="Y-m-d H:i:s"}</p>
+    <p class="text">登录IP:{$Think.session.admin.admin_ip}</p>
+</div>
+<div class="container" id="container">
+    <div class="container-wrap">
+        <div class="home-panel">
+            <div class="count-data-wrap">
+                <div class="data">
+                    <i class="layui-icon layui-icon-read" style="font-size: 66px; color:#5FB878;"></i>
+                    <div class="text-wrap">
+                        <h5 class="num-text">132</h5>
+                        <h6 class="text">文章总数</h6>
+                    </div>
+                </div>
+                <div class="data">
+                    <i class="layui-icon layui-icon-user" style="font-size: 66px; color:#2F4056;"></i>
+                    <div class="text-wrap">
+                        <h5 class="num-text">132</h5>
+                        <h6 class="text">会员总数</h6>
+                    </div>
+                </div>
+                <div class="data">
+                    <i class="layui-icon layui-icon-form" style="font-size: 66px; color: #FFB800;"></i>
+                    <div class="text-wrap">
+                        <h5 class="num-text">132</h5>
+                        <h6 class="text">订单总数</h6>
+                    </div>
+                </div>
+                <div class="data">
+                    <i class="layui-icon layui-icon-rmb" style="font-size: 66px; color: #FF5722;"></i>
+                    <div class="text-wrap">
+                        <h5 class="num-text">132</h5>
+                        <h6 class="text">订单总金额</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="home-flex clear">
+            <div class="flex float-right">
+                <div class="home-panel">
+                    <div class="flex-right">
+                        <div class="action-menu">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </div>
+                    </div>
+                    <div class="canvas-title">
+                        <h4 class="title">数据增加情况</h4>
+                        <div class="flex">
+                            <div class="canvas-tab">
+                                <span class="item active">日数据</span>
+                                <span class="item">月数据</span>
+                                <span class="item">年数据</span>
+                            </div>
+                        </div>
+                        <ul class="canvas-label">
+                            <li>
+                                <i class="icon-label0"></i>转发</li>
+                            <li>
+                                <i class="icon-label1"></i>名片</li>
+                            <li>
+                                <i class="icon-label2"></i>公司</li>
+                            <li>
+                                <i class="icon-label3"></i>产品</li>
+                        </ul>
+                    </div>
+                    <div class="canvas-wrap">
+                        <div id="add-echart" style="width:100%;height: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="home-flex bg-white clear">
+            <div class="flex">
+                <div class="home-panel container" style="width: 60%;float: left;">
+                    <div class="canvas-title">
+                        <h4 class="title">留言反馈</h4>
+                    </div>
+                    <div class="canvas-wrap">
+                        <div class="opinion-wrap active">
+                            <div class="opinion-box">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+                <div class="home-panel" style="width: 30%;float: left">
+                    <div class="canvas-title">
+                        <h4 class="title">版本信息</h4>
+                    </div>
+                    <div class="canvas-wrap">
+                        <div class="opinion-wrap active">
+                                <table class="layui-table">
+                                    <tr>
+                                        <td>服务器环境:</td>
+                                        <td>{$version['apache']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>服务器域名:</td>
+                                        <td>{$version['url']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PHP版本:</td>
+                                        <td>{$version['php']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>服务器操作系统:</td>
+                                        <td>{$version['os']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>thinkphp版本</td>
+                                        <td>{$version['tp']}</td>
+                                    </tr>
+                                </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="js"}
+
+{/block}

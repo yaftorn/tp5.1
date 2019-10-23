@@ -1,0 +1,72 @@
+{extend name="base"}
+{block name="title"}{$title}{/block}
+{block name="main"}
+<div class="page-bar">
+    <h4 class="title">{$title}</h4>
+</div>
+
+<div class="container" id="container">
+    <div class="container-wrap">
+        <div class="home-panel">
+            <div class="form-flex">
+                <a  href="{:url('article/addCategory')}" class="blue-btn">添加分类</a>
+            </div>
+        </div>
+        <div class="home-panel mt-15">
+            <table id="munu-table" class="layui-table" lay-filter="munu-table"></table>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="caozuo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="delete">删除</a>
+</script>
+{/block}
+{block name="js"}
+<script>
+    layui.use(['table', 'treetable'], function () {
+        var table = layui.table;
+        var treetable = layui.treetable
+        treetable.render({
+            elem: '#munu-table',// 必须
+            url: "{:url('article/apiCategoryList')}",
+            icon_key: 'category_title',// 必须
+            primary_key: 'category_id',
+            parent_key: 'parent_id',
+            icon: { //开关图标
+                open: 'layui-icon layui-icon-triangle-d',
+                close: 'layui-icon layui-icon-triangle-r',
+                left: 16,
+            },
+            cols: [
+                {key: 'category_id', title: 'ID'},
+                {key: 'category_title', title: '分类名称'},
+                {title: '操作',template: function(item){return ''+
+                        '  <a class="layui-btn layui-btn-xs"  onclick="editNav('+item.category_id+')">编辑</a>' +
+                        '  <a class="layui-btn layui-btn-xs layui-btn-normal"  onclick="delNav('+item.category_id+')">删除</a>'
+                    }}
+            ],
+        })
+
+    })
+    function editNav(id){
+        window.location.href="{:url('article/editCategory')}?category_id="+id;
+    }
+    function delNav(id){
+        $.ajax({
+            url:"{:url('article/delCategory')}",
+            type:"get",
+            data:{category_id:id},
+            success:function (re) {
+                if (re.code == 15){
+                    layer.msg(re.msg,function () {
+                        window.location.reload();
+                    });
+                }else{
+                    layer.msg(re.msg);
+                }
+            }
+        })
+    }
+</script>
+{/block}

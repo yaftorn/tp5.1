@@ -1,0 +1,120 @@
+{extend name="base"}
+{block name="title"}{$title}{/block}
+{block name="main"}
+<div class="page-bar">
+    <h4 class="title">{$title}</h4>
+</div>
+
+<div class="container" id="container">
+    <div class="container-wrap">
+        <div class="home-panel">
+            <div class="info-container clear">
+                <div class="vip-info">
+                    <div class="info-item">
+                        <div class="title-wrap">
+                            <h4 class="title">{$title}</h4>
+                        </div>
+                        <div class="info-wrap layui-form">
+                            <div class="info-form">
+
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">选择角色:</label>
+                                    <div class="layui-input-inline">
+                                        <select name="role_id" lay-filter="nav">
+                                            {foreach $roleList as $v}
+                                            <option {notempty name="$info"}{if  $v['role_id'] eq $info['role_id'] }  selected="" {/if}{/notempty} value="{$v['role_id']}">{$v['role_name']}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-item">
+                                    <label class="layui-form-label" for="">账号：</label>
+                                    <input class="input" name="admin_account" value="{$info['admin_account']|default=''}" type="text">
+                                </div>
+                                <div class="form-item">
+                                    <label class="layui-form-label" for="">密码：</label>
+                                    {notempty name="$info"}
+                                    <button class="layui-btn" id="pwd" data-id="{$info['admin_id']}">密码重置</button>
+                                    {else}
+                                    <input name="admin_password" value="{$info['admin_password']|default=''}" class="input"  type="text">
+                                    {/notempty}
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">是否正常:</label>
+                                    <div class="layui-input-block">
+                                        <input type="checkbox" {notempty name="$info"}{if  $info['status'] eq 0}  checked=""  {/if}{/notempty} name="status" lay-skin="switch" lay-filter="switchTest" lay-text="正常|冻结">
+                                    </div>
+                                </div>
+                                <input type="hidden" value="{$info['admin_id']|default=''}" name="admin_id">
+                                <button class="blue-btn"  lay-submit="" lay-filter="btn">立即提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script>
+    layui.use(['form'],function () {
+        var form = layui.form;
+        form.render();
+
+        form.on('submit(btn)',function (data) {
+            var id = data.field.admin_id;
+            if (data.field.status === 'on'){
+                data.field.status = 0;
+            }else{
+                data.field.status = 1;
+            }
+            if (id === ''){
+                $.ajax({
+                    url:"{:url('auth/addAdmin')}",
+                    type:"post",
+                    data:data.field,
+                    success:function (re) {
+                        if (re.code === 9){
+                            layer.msg(re.msg,function () {
+                                window.location.href = "{:url('auth/adminList')}";
+                            })
+                        }else{
+                            layer.msg(re.msg);
+                        }
+                    }
+                })
+            }else{
+                $.ajax({
+                    url:"{:url('auth/editAdmin')}",
+                    type:"post",
+                    data:data.field,
+                    success:function (re) {
+                        if (re.code === 13){
+                            layer.msg(re.msg,function () {
+                                window.location.href = "{:url('auth/adminList')}";
+                            })
+                        }else{
+                            layer.msg(re.msg);
+                        }
+                    }
+                })
+            }
+        })
+    })
+    $("#pwd").click(function () {
+        var id = $(this).data("id");
+        layer.confirm('此操作会将密码重置为123456', function(index){
+            $.ajax({
+                url:"{:url('auth/rePassword')}",
+                type:"get",
+                data:{admin_id:id},
+                success:function (re) {
+                    layer.msg(re.msg);
+                }
+            })
+        })
+
+    })
+</script>
+{/block}

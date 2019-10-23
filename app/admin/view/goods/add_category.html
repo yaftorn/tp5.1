@@ -1,0 +1,105 @@
+{extend name="base"}
+{block name="title"}{$title}{/block}
+{block name="main"}
+<div class="page-bar">
+    <h4 class="title">{$title}</h4>
+</div>
+
+<div class="container" id="container">
+    <div class="container-wrap">
+        <div class="home-panel">
+            <div class="info-container clear">
+                <div class="vip-info">
+                    <div class="info-item">
+                        <div class="title-wrap">
+                            <h4 class="title">{$title}</h4>
+                        </div>
+                        <div class="info-wrap layui-form">
+                            <div class="info-form">
+
+                                <div class="form-item">
+                                    <label class="layui-form-label" for="">分类名称：</label>
+                                    <input class="input" name="category_title" value="{$info['category_title']|default=''}" type="text">
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">顶级导航:</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" id="tree" lay-filter="tree" class="layui-input" name="parent_id" value="{$info['parent_id']|default=0}">
+                                    </div>
+                                </div>
+                                <div class="form-item">
+                                    <label class="layui-form-label" for="">排序：</label>
+                                    <input class="input" name="sort" value="{$info['sort']|default=''}" type="text">
+                                </div>
+                                <input type="hidden" value="{$info['category_id']|default=''}" name="category_id">
+                                <button class="blue-btn"  lay-submit="" lay-filter="btn">立即提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script>
+    layui.use(['form','treeSelect'],function () {
+        var form = layui.form;
+        var id = $("input[name=parent_id]").val();
+        form.render();
+        var treeSelect = layui.treeSelect;
+        treeSelect.render({
+            elem: '#tree',
+            data: "{:url('goods/apiAddCategory')}",
+            placeholder: '顶级导航',
+            search: true,
+            style: {
+                folder: {
+                    enable: true
+                },
+                line: {
+                    enable: true
+                }
+            },
+            success: function (d) {
+                treeSelect.checkNode('tree', id); //默认选中
+            }
+        });
+        form.on('submit(btn)',function (data) {
+            var id = data.field.category_id;
+            if (id === ''){
+                $.ajax({
+                    url:"{:url('goods/addCategory')}",
+                    type:"post",
+                    data:data.field,
+                    success:function (re) {
+                        if (re.code === 9){
+                            layer.msg(re.msg,function () {
+                                window.location.href = "{:url('goods/goodsCategory')}";
+                            })
+                        }else{
+                            layer.msg(re.msg);
+                        }
+                    }
+                })
+            }else{
+                $.ajax({
+                    url:"{:url('goods/editCategory')}",
+                    type:"post",
+                    data:data.field,
+                    success:function (re) {
+                        if (re.code === 13){
+                            layer.msg(re.msg,function () {
+                                window.location.href = "{:url('goods/goodsCategory')}";
+                            })
+                        }else{
+                            layer.msg(re.msg);
+                        }
+                    }
+                })
+            }
+        })
+    })
+</script>
+{/block}

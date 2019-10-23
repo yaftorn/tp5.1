@@ -1,0 +1,108 @@
+{extend name="base"}
+{block name="title"}{$title}{/block}
+{block name="main"}
+<div class="page-bar">
+    <h4 class="title">{$title}</h4>
+</div>
+
+<div class="container" id="container">
+    <div class="container-wrap">
+        <div class="home-panel">
+            <div class="info-container clear">
+                <div class="vip-info">
+                    <div class="info-item">
+                        <div class="title-wrap">
+                            <h4 class="title">{$title}</h4>
+                        </div>
+                        <div class="info-wrap layui-form">
+                            <div class="info-form">
+
+                                <div class="form-item">
+                                    <label class="layui-form-label" for="">角色名称：</label>
+                                    <input class="input" name="role_name" value="{$info['role_name']|default=''}" type="text">
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">选择权限:</label>
+                                    <div class="layui-input-block">
+                                        <div id="LAY-auth-tree-index"></div>
+                                    </div>
+                                </div>
+                                <input type="hidden" value="{$info['role_id']|default=''}" name="role_id">
+                                <button class="blue-btn"  lay-submit="" lay-filter="btn">立即提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script>
+    //config的设置是全局的
+    layui.use(['form','authtree'],function () {
+        var form = layui.form;
+        var authtree = layui.authtree;
+        var id = $("input[name=role_id]").val();
+        $.ajax({
+            url: "{:url('auth/getNav')}",
+            data:{role_id:id},
+            dataType: 'json',
+            success: function(data){
+                var trees = authtree.listConvert(data.nav, {
+                    primaryKey: 'limit_id'
+                    ,startPid: 0
+                    ,parentKey: 'parent_id'
+                    ,nameKey: 'limit_name'
+                    ,valueKey: 'limit_id'
+                    ,checkedKey: data.checkedId
+                });
+                // 如果后台返回的不是树结构，请使用 authtree.listConvert 转换
+                authtree.render('#LAY-auth-tree-index', trees, {
+                    inputname: 'authids[]',
+                    layfilter: 'lay-check-auth',
+                    autowidth: true,
+                });
+            }
+        });
+        form.render();
+        form.on('submit(btn)',function (data) {
+            var id = data.field.role_id;
+            var checked = authtree.getChecked('#LAY-auth-tree-index');
+            data.field.authids = checked;
+            if (id === ''){
+                $.ajax({
+                    url:"{:url('auth/addRole')}",
+                    type:"post",
+                    data:{role_auth:data.field.authids,role_id:data.field.role_id,role_name:data.field.role_name},
+                    success:function (re) {
+                        if (re.code === 9){
+                            layer.msg(re.msg,function () {
+                                window.location.href = "{:url('auth/roleList')}";
+                            })
+                        }else{
+                            layer.msg(re.msg);
+                        }
+                    }
+                })
+            }else{
+                $.ajax({
+                    url:"{:url('auth/editRole')}",
+                    type:"post",
+                    data:{role_auth:data.field.authids,role_id:data.field.role_id,role_name:data.field.role_name},
+                    success:function (re) {
+                        if (re.code === 13){
+                            layer.msg(re.msg,function () {
+                                window.location.href = "{:url('auth/roleList')}";
+                            })
+                        }else{
+                            layer.msg(re.msg);
+                        }
+                    }
+                })
+            }
+        })
+    })
+</script>
+{/block}

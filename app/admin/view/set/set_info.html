@@ -1,0 +1,174 @@
+{extend name="base"}
+{block name="title"}{$title}{/block}
+{block name="main"}
+<div class="page-bar">
+    <h4 class="title">{$title}</h4>
+</div>
+<style>
+    .layui-form-item .layui-input-company {width: auto;padding-right: 10px;line-height: 38px;}
+</style>
+<div class="container" id="container">
+    <div class="container-wrap">
+        <div class="home-panel">
+            <div class="info-container clear">
+                <div class="vip-info" style="width:1200px">
+                    <div class="info-item">
+                        <div class="title-wrap">
+                            <h4 class="title">{$title}</h4>
+                        </div>
+                        <div class="info-wrap">
+                            <div class="layuimini-container">
+                                <div class="layuimini-main">
+                                    <div class="layui-form layuimini-form">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label required">网站名称:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="site_name" lay-verify="required" lay-reqtext="请输入网站名称" placeholder="请输入网站名称"  value="{$info['site_name']|default=''}" class="layui-input">
+                                                <div class="layui-form-mid layui-word-aux">填写自己部署网站的名称。</div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">最大文件上传:</label>
+                                            <div class="layui-input-inline" style="width: 80px;">
+                                                <input type="text" name="file_size" lay-verify="number" value="{$info['file_size']|default=''}" class="layui-input">
+                                            </div>
+                                            <div class="layui-input-inline layui-input-company">KB</div>
+                                            <div class="layui-form-mid layui-word-aux">提示：1 M = 1024 KB</div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">上传文件类型:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="file_type"  value="{$info['file_type']|default=''}" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" for="">LOGO：</label>
+                                            <div class="layui-upload-drag" id="logo">
+                                                <i class="layui-icon"></i>
+                                                <p>点击上传，或将文件拖拽到此处</p>
+                                            </div>
+                                                <img style="width: 80px;" class="layui-upload-img" src="{$info['site_logo']|default=''}" id="demo">
+                                                <input type="hidden" value="{$info['site_logo']|default=''}" name="site_logo">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" for="">二维码：</label>
+                                            <div class="layui-upload-drag" id="code">
+                                                <i class="layui-icon"></i>
+                                                <p>点击上传，或将文件拖拽到此处</p>
+                                            </div>
+                                            <img style="width: 120px;" class="layui-upload-img" src="{$info['site_code']|default=''}" id="demo1">
+                                            <input type="hidden" name="site_code" value="{$info['site_code']|default=''}">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label required">联系方式:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="site_tel"  value="{$info['site_tel']|default=''}" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label required">邮箱:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="site_email"  value="{$info['site_email']|default=''}" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                            <label class="layui-form-label required">首页标题:</label>
+                                            <div class="layui-input-block">
+                                                <textarea name="site_title" class="layui-textarea">{$info['site_title']|default=''}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                            <label class="layui-form-label">META关键词:</label>
+                                            <div class="layui-input-block">
+                                                <textarea name="site_keywords" class="layui-textarea" placeholder="多个关键词用英文状态 , 号分割">{$info['site_keywords']|default=''}
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                            <label class="layui-form-label">META描述:</label>
+                                            <div class="layui-input-block">
+                                                <textarea name="site_description" class="layui-textarea">{$info['site_description']|default=''}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                            <label class="layui-form-label required">版权信息:</label>
+                                            <div class="layui-input-block">
+                                                <textarea name="site_copyright" class="layui-textarea">{$info['site_copyright']|default=''}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button lay-submit="" lay-filter="btn" class="blue-btn">立即提交</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script>
+    layui.use('upload', function(){
+        var upload = layui.upload
+        var form = layui.form
+        //拖拽上传
+        upload.render({
+            elem: '#logo'
+            ,url: "{:url('base/upload')}"
+            ,done: function(res){
+
+               if (res.code === 200){
+                   layer.msg(res.msg,function () {
+                       $("#demo").attr('src',res.src);
+                       $("input[name=site_logo]").val(res.src);
+                   });
+               }else{
+                   layer.msg(res.msg);
+               }
+            }
+            ,accept: 'file' //允许上传的文件类型
+            ,size: 2048 //最大允许上传的文件大小 2m
+        });
+        upload.render({
+            elem: '#code'
+            ,url: "{:url('base/upload')}"
+            ,done: function(res){
+                if (res.code === 200){
+                    layer.msg(res.msg,function () {
+                        $("#demo1").attr('src',res.src);
+                        $("input[name=site_code]").val(res.src);
+                    });
+                }else{
+                    layer.msg(res.msg);
+                }
+            }
+            ,accept: 'file' //允许上传的文件类型
+            ,size: 2048 //最大允许上传的文件大小 2m
+        });
+        form.on('submit(btn)',function (data) {
+            $.ajax({
+                url:"{:url('set/setInfo')}",
+                data:data.field,
+                type:"post",
+                success:function (re) {
+                    if (re.code === 13){
+                        layer.msg(re.msg,function () {
+                            window.location.reload();
+                        })
+                    }else{
+                        layer.msg(re.msg);
+                    }
+                }
+            })
+        })
+
+    })
+</script>
+{/block}

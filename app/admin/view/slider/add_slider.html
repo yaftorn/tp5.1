@@ -1,0 +1,134 @@
+{extend name="base"}
+{block name="title"}{$title}{/block}
+{block name="main"}
+<div class="page-bar">
+    <h4 class="title">{$title}</h4>
+</div>
+
+<div class="container" id="container">
+    <div class="container-wrap">
+        <div class="home-panel">
+            <div class="info-container clear">
+                <div class="vip-info">
+                    <div class="info-item">
+                        <div class="title-wrap">
+                            <h4 class="title">{$title}</h4>
+                        </div>
+                        <div class="info-wrap layui-form">
+                            <div class="info-form">
+
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">选择位置:</label>
+                                    <div class="layui-input-inline">
+                                        <select name="type_id" lay-filter="nav">
+                                            {foreach $type as $v}
+                                            <option {notempty name="$info"}{if  $v['type_id'] eq $info['type_id'] }  selected="" {/if}{/notempty} value="{$v['type_id']}">{$v['type_name']}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-item">
+                                    <label class="layui-form-label" for="">名称：</label>
+                                    <input class="input" name="slider_name" value="{$info['slider_name']|default=''}" type="text">
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label" for="">缩略图：</label>
+                                    <div class="layui-upload-drag" id="logo">
+                                        <i class="layui-icon"></i>
+                                        <p>点击上传，或将文件拖拽到此处</p>
+                                    </div>
+                                    <img style="width: 80px;" class="layui-upload-img" src="{$info['slider_thumb']|default=''}" id="demo">
+                                    <input type="hidden" value="{$info['slider_thumb']|default=''}" name="slider_thumb">
+                                </div>
+                                <div class="form-item">
+                                    <label class="layui-form-label" for="">跳转链接：</label>
+                                    <input class="input" name="slider_link" value="{$info['slider_link']|default=''}" type="text">
+                                </div>
+                                <div class="form-item">
+                                    <label class="layui-form-label" for="">排序：</label>
+                                    <input class="input" name="slider_sort" value="{$info['slider_sort']|default=''}" type="text">
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">是否显示:</label>
+                                    <div class="layui-input-block">
+                                        <input type="checkbox" {notempty name="$info"}{if  $info['slider_status'] eq 1}  checked=""  {/if} {else} checked="" {/notempty} name="slider_status" lay-skin="switch" lay-filter="switchTest" lay-text="是|否">
+                                    </div>
+                                </div>
+                                <input type="hidden" value="{$info['slider_id']|default=''}" name="slider_id">
+                                <button class="blue-btn"  lay-submit="" lay-filter="btn">立即提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script>
+    layui.use(['form','upload'],function () {
+        var form = layui.form;
+        var upload = layui.upload;
+        form.render();
+        //拖拽上传
+        upload.render({
+            elem: '#logo'
+            ,url: "{:url('base/upload')}"
+            ,done: function(res){
+
+                if (res.code === 200){
+                    layer.msg(res.msg,function () {
+                        $("#demo").attr('src',res.src);
+                        $("input[name=slider_thumb]").val(res.src);
+                    });
+                }else{
+                    layer.msg(res.msg);
+                }
+            }
+            ,accept: 'file' //允许上传的文件类型
+            ,size: 2048 //最大允许上传的文件大小 2m
+        });
+        form.on('submit(btn)',function (data) {
+            var id = data.field.slider_id;
+            if (data.field.slider_status === 'on'){
+                data.field.slider_status = 1;
+            }else{
+                data.field.slider_status = 0;
+            }
+            if (id === ''){
+                $.ajax({
+                    url:"{:url('slider/addSlider')}",
+                    type:"post",
+                    data:data.field,
+                    success:function (re) {
+                        if (re.code === 9){
+                            layer.msg(re.msg,function () {
+                                window.location.href = "{:url('slider/sliderList')}";
+                            })
+                        }else{
+                            layer.msg(re.msg);
+                        }
+                    }
+                })
+            }else{
+                $.ajax({
+                    url:"{:url('slider/editSlider')}",
+                    type:"post",
+                    data:data.field,
+                    success:function (re) {
+                        if (re.code === 13){
+                            layer.msg(re.msg,function () {
+                                window.location.href = "{:url('slider/sliderList')}";
+                            })
+                        }else{
+                            layer.msg(re.msg);
+                        }
+                    }
+                })
+            }
+        })
+    })
+
+</script>
+{/block}

@@ -1,0 +1,93 @@
+{extend name="base"}
+{block name="title"}{$title}{/block}
+{block name="main"}
+<div class="page-bar">
+    <h4 class="title">{$title}</h4>
+</div>
+
+<div class="container" id="container">
+    <div class="container-wrap">
+        <div class="home-panel">
+            <div class="form-flex">
+                <div class="order-form layui-form">
+                    <div class="order-item">
+                         <div class="order-box">
+                              <label class="label" for="">管理员：</label>
+                              <div class="order">
+                                  <input class="input" name="content" type="text">
+                              </div>
+                         </div>
+                     </div>
+                     <button class="order-btn" lay-submit="" lay-filter="formDemo">点击查询</button>
+                 </div>
+                <a  href="{:url('auth/addAdmin')}" class="blue-btn">添加管理员</a>
+            </div>
+        </div>
+        <div class="home-panel mt-15">
+            <table id="table" class="layui-table" lay-filter="table">
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="caozuo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="delete">删除</a>
+</script>
+{/block}
+{block name="js"}
+<script>
+    layui.use(['table','form'],function (data) {
+        var table = layui.table;
+        var form = layui.form;
+        var layer = layui.layer;
+        table.render({
+            elem: '#table'
+            ,method:"post"
+            ,id:"reload"
+            ,url: "{:url('auth/apiAdminList')}" //数据接口
+            ,page: true //开启分页
+            ,cols: [[ //表头
+                {field: 'admin_id', title: 'ID',  fixed: 'left'}
+                ,{field: 'admin_account', title: '管理员账号'}
+                ,{field: 'admin_endtime', title: '最近登录时间'}
+                ,{field: 'admin_ip', title: '最近登录ip'}
+                ,{title: '操作',templet: '#caozuo'}
+            ]]
+        })
+        form.on('submit(formDemo)',function (data) {
+            //表格重载
+            table.reload('reload', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                ,where: data.field
+            });
+            return false;
+        })
+        //监听工具条
+        table.on('tool(table)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            if(obj.event === 'edit'){
+                window.location.href="{:url('auth/editAdmin')}?admin_id="+data.admin_id;
+            } else if(obj.event === 'delete'){
+                layer.confirm('确定要删除吗?删除后不可恢复', function(index){
+                    $.ajax({
+                        url:"{:url('auth/delAdmin')}",
+                        type:"get",
+                        data:{admin_id:data.admin_id},
+                        success:function (re) {
+                            if (re.code == 15){
+                                layer.msg(re.msg,function () {
+                                    window.location.reload();
+                                });
+                            }else{
+                                layer.msg(re.msg);
+                            }
+                        }
+                    })
+                });
+            }
+        });
+    })
+</script>
+{/block}

@@ -1,0 +1,359 @@
+{extend name="base"}
+{block name="title"}{$title}{/block}
+
+{block name="main"}
+<div class="page-bar">
+    <h4 class="title">{$title}</h4>
+</div>
+<style>
+
+    .img { width: 90px; height: 90px; margin: 0; }
+    #slide-pc-priview .item_img{float: left}
+    .pic-more {width:100%;float: left; margin: 10px 0px 0px 0px;}
+    .pic-more li { width:90px; float: left; margin-right: 5px;float: left}
+    .pic-more li .layui-input { display: initial; }
+    .pic-more li a { position: absolute; top: 0; display: block; }
+    .pic-more li a i { font-size: 24px; background-color: #008800; }
+    #slide-pc-priview .item_img img{ width: 90px; height: 90px;}
+    #slide-pc-priview li{position: relative; }
+    #slide-pc-priview li .operate{ color: #000; display: none;}
+    #slide-pc-priview li .toleft{ position: absolute;top: 40px; left: 1px; cursor:pointer;}
+    #slide-pc-priview li .toright{ position: absolute;top: 40px; right: 1px;cursor:pointer;}
+    #slide-pc-priview li .close{position: absolute;top: 5px; right: 5px;cursor:pointer;}
+    #slide-pc-priview li:hover .operate{ display: block;}
+</style>
+<div class="container" id="container">
+    <div class="container-wrap">
+        <div class="home-panel">
+            <div class="info-container clear">
+                <div class="vip-info" style="width:1200px">
+                    <div class="info-item">
+                        <div class="title-wrap">
+                            <h4 class="title">{$title}</h4>
+                        </div>
+                        <div class="info-wrap">
+                            <div class="layuimini-container">
+                                <div class="layuimini-main">
+                                    <div class="layui-form layuimini-form">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label required">商品名称:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="goods_name" lay-verify="required" lay-reqtext="请输入标题" placeholder="请输入标题"  value="{$info['article_title']|default=''}" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">选择分类:</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" id="tree" lay-filter="tree" class="layui-input" name="category_id" value="{$info['category_id']|default=0}">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                            <label class="layui-form-label">摘要:</label>
+                                            <div class="layui-input-block">
+                                                <textarea name="goods_description" class="layui-textarea">{$info['goods_description']|default=''}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" for="">缩略图：</label>
+                                            <div class="layui-upload-drag" id="logo">
+                                                <i class="layui-icon"></i>
+                                                <p>点击上传，或将文件拖拽到此处</p>
+                                            </div>
+                                            <img style="width: 80px;" class="layui-upload-img" src="{$info['goods_thumb']|default=''}" id="demo">
+                                            <input type="hidden" value="{$info['goods_thumb']|default=''}" name="article_thumb">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" for="">相册：</label>
+                                            <div style="margin-left: 150px">
+                                                <button type="button" class="layui-btn" id="test2">多图片上传</button>
+                                                <div class="pic-more">
+                                                    <ul class="pic-more-upload-list" id="slide-pc-priview">
+                                                        {notempty name="$info['goods_photos']"}
+                                                        {foreach $info['goods_photos'] as $v}
+                                                        <li class="item_img">
+                                                            <div class="operate">
+                                                                <i class="toleft layui-icon">《</i>
+                                                                <i class="toright layui-icon">》</i>
+                                                                <i class="layui-icon layui-icon-delete close"></i>
+                                                            </div>
+                                                            <img src="{$v}" class="img" >
+                                                            <input type="hidden" name="goods_photos[]" value="{$v}" />
+                                                        </li>
+                                                        {/foreach}
+                                                        {/notempty}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                            <label class="layui-form-label">商品属性:</label>
+                                            <div class="layui-input-block" >
+                                                <input type="radio" name="goods_value" title="单属性" value="0"  lay-filter="sku" checked="">
+                                                <input type="radio" name="goods_value" title="多属性"  value="1" lay-filter="sku">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text one">
+                                            <label class="layui-form-label">市场价:</label>
+                                            <div class="layui-input-inline" >
+                                                <input type="text" name="market_price" placeholder="请输入市场价"  value="" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text one">
+                                            <label class="layui-form-label">销售价:</label>
+                                            <div class="layui-input-inline" >
+                                                <input type="text" name="sell_price" placeholder="请输入销售价"  value="" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text one">
+                                            <label class="layui-form-label">成本价:</label>
+                                            <div class="layui-input-inline" >
+                                                <input type="text" name="cost_price" placeholder="请输入成本价"  value="" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text more" style="display: none">
+                                            <label class="layui-form-label">选择属性:</label>
+                                            <div class="layui-input-block" >
+                                                {foreach $key as $v}
+                                                <input type="checkbox" name="key" title="{$v['key_name']}" value="{$v['key_id']}" lay-filter="key">
+                                                {/foreach}
+                                            </div>
+                                           <div id="sku" data-item="" data-data="" style="margin-left: 100px"></div>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                            <label class="layui-form-label">详情:</label>
+                                            <div class="layui-input-block">
+                                                <textarea name="goods_content" id="edit" cols="30" rows="10">{$info['goods_content']|raw|default=''}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label ">销售量:</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="sales" placeholder="请输入销售量"  value="{$info['sales']|default=''}" class="layui-input">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">排序:</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="sort"  placeholder="请输入排序"  value="{$info['sort']|default='0'}" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">是否上架:</label>
+                                            <div class="layui-input-block">
+                                                <input type="checkbox" {notempty name="$info"} {if  $info['goods_status'] eq 1}  checked=""  {/if} {else} checked="" {/notempty} name="goods_status"  lay-skin="switch" lay-text="是|否">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item" pane="">
+                                            <label class="layui-form-label">是否推荐:</label>
+                                            <div class="layui-input-block">
+                                                <input type="checkbox"  name="recommend" {notempty name="$info"}{if  $info['recommend'] eq 1}  checked=""  {/if}{/notempty} lay-skin="switch" lay-text="是|否">
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="goods_id" value="{$info['goods_id']|default=''}">
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button lay-submit="" lay-filter="btn" class="blue-btn">立即提交</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script>
+
+    layui.use(['form','upload','util','tinymce','treeSelect','sku'], function(){
+        var upload = layui.upload
+        var form = layui.form
+        var sku = layui.sku
+        var tinymce = layui.tinymce
+        var treeSelect = layui.treeSelect
+        var edit = tinymce.render({
+            elem: "#edit"
+            , height: 600
+            , width:'100%'
+        });
+        treeSelect.render({
+            elem: '#tree',
+            data: "{:url('goods/apiAddCategory')}",
+            placeholder: '选择分类',
+            search: true,
+            style: {
+                folder: {
+                    enable: true
+                },
+                line: {
+                    enable: true
+                }
+            },
+
+            success: function (d) {
+                var category_id = $("input[name=category_id]").val();
+                treeSelect.checkNode('tree', category_id); //默认选中
+            }
+        });
+        //拖拽上传
+        upload.render({
+            elem: '#logo'
+            ,url: "{:url('base/upload')}"
+            ,done: function(res){
+
+                if (res.code === 200){
+                    layer.msg(res.msg,function () {
+                        $("#demo").attr('src',res.src);
+                        $("input[name=article_thumb]").val(res.src);
+                    });
+                }else{
+                    layer.msg(res.msg);
+                }
+            }
+            ,accept: 'file' //允许上传的文件类型
+            ,size: 2048 //最大允许上传的文件大小 2m
+        });
+        //多图片上传
+        upload.render({
+            elem: '#test2'
+            ,url: "{:url('base/upload')}"
+            ,multiple: true
+            ,done: function(res){
+                //上传完毕
+                $('#slide-pc-priview').append('<li class="item_img"><div class="operate"><i class="toleft layui-icon">《</i><i class="toright layui-icon">》</i><i class="layui-icon layui-icon-delete close"></i> </div><img src="' + res.src + '" class="img" ><input type="hidden" name="article_moreimg[]" value="' + res.src + '" /></li>');
+            }
+        });
+
+        //多图片上传
+        upload.render({
+            elem: document.getElementsByClassName("tt")
+            ,url: "{:url('base/upload')}"
+            ,multiple: true
+            ,done: function(res, index, upload){
+                //获取当前触发上传的元素，一般用于 elem 绑定 class 的情况，注意：此乃 layui 2.1.0 新增
+                var item = this.item;
+            }
+        });
+
+        // $("#sku").on("click",".test3",function(){
+        //
+        // });
+        //点击多图上传的X,删除当前的图片
+        $("body").on("click",".close",function(){
+            $(this).closest("li").remove();
+        });
+        //多图上传点击<>左右移动图片
+        $("body").on("click",".pic-more ul li .toleft",function(){
+            var li_index=$(this).closest("li").index();
+            if(li_index>=1){
+                $(this).closest("li").insertBefore($(this).closest("ul").find("li").eq(Number(li_index)-1));
+            }
+        });
+        $("body").on("click",".pic-more ul li .toright",function(){
+            var li_index=$(this).closest("li").index();
+            $(this).closest("li").insertAfter($(this).closest("ul").find("li").eq(Number(li_index)+1));
+        });
+
+        $("body").on("click",".pic-more-upload-list li img",function(e) {
+            layer.photos({
+                photos: {"data": [{"src": e.target.src}]}
+            });
+        })
+        form.on('radio(sku)', function(data){
+            if (data.value == 0){
+                $(".one").show();
+                $(".more").hide();
+            }else if(data.value == 1){
+                $(".one").hide();
+                $(".more").show();
+            }
+        });
+        //复选框选中事件
+        form.on('checkbox(key)', function(data){
+           $("#sku").empty();
+            var arr = [];
+            $("input[name='key']:checked").each(function() {
+                arr.push($(this).val());
+            })
+            $.ajax({
+                url:"{:url('goods/getValue')}",
+                type:"post",
+                data:{arr:arr},
+                success:function (re) {
+                    item = $.parseJSON(re);
+                    if (item != ''){
+                        var SKU = sku.init({ id:'sku', item: item});
+                    }
+                }
+            })
+        });
+        form.on('submit(btn)',function (data) {
+            var id = data.field.article_id;
+            if (data.field.artilce_status === 'on'){
+                data.field.artilce_status = 1;
+            }else{
+                data.field.artilce_status = 0;
+            }
+            if (data.field.article_recommend === 'on'){
+                data.field.article_recommend = 1;
+            }else{
+                data.field.article_recommend = 0;
+            }
+            data.field.article_content = edit.getContent();
+            if (id == ''){
+                $.ajax({
+                    url:"{:url('article/addArticle')}",
+                    data:data.field,
+                    type:"post",
+                    success:function (re) {
+                        if (re.code === 9){
+                            layer.msg(re.msg,function () {
+                                window.location.href = "{:url('article/articleList')}";
+                            })
+                        }else{
+                            layer.msg(re.msg);
+                        }
+                    }
+                })
+            }else{
+                $.ajax({
+                    url:"{:url('article/editArticle')}",
+                    data:data.field,
+                    type:"post",
+                    success:function (re) {
+                        if (re.code === 13){
+                            layer.msg(re.msg,function () {
+                                window.location.reload();
+                            })
+                        }else{
+                            layer.msg(re.msg);
+                        }
+                    }
+                })
+            }
+
+        })
+
+
+    })
+
+    // var skuimg = function (id) {
+    //     layui.use(['form','upload','util','tinymce','treeSelect','sku'], function(){var upload = layui.upload
+    //         upload.render({
+    //             elem: "#tt"+id
+    //             ,url: "{:url('base/upload')}"
+    //             ,done: function(res){
+    //             }
+    //         });
+    //     })
+    // }
+
+</script>
+{/block}

@@ -1,0 +1,76 @@
+{extend name="base"}
+{block name="title"}{$title}{/block}
+{block name="main"}
+<div class="page-bar">
+    <h4 class="title">{$title}</h4>
+</div>
+
+<div class="container" id="container">
+    <div class="container-wrap">
+        <div class="home-panel">
+            <div class="info-container clear">
+                <div class="vip-info">
+                    <div class="info-item">
+                        <div class="title-wrap">
+                            <h4 class="title">{$title}</h4>
+                        </div>
+                        <div class="info-wrap layui-form">
+                            <div class="info-form">
+
+                                <div class="form-item">
+                                    <label class="layui-form-label" for="">位置名称：</label>
+                                    <input class="input" name="type_name" value="{$info['type_name']|default=''}" type="text">
+                                </div>
+
+                                <input type="hidden" value="{$info['type_id']|default=''}" name="type_id">
+                                <button class="blue-btn"  lay-submit="" lay-filter="btn">立即提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script>
+    layui.use('form',function () {
+        var form = layui.form;
+        form.on('submit(btn)',function (data) {
+            if (data.field.type_id == ''){
+                $.ajax({
+                    url:"{:url('slider/addType')}",
+                    type:"post",
+                    data:data.field,
+                    success:function (re) {
+                        if (re.code === 9){
+                            layer.msg(re.msg,function () {
+                                window.location.href = "{:url('slider/typeList')}";
+                            })
+                        }else{
+                            layer.msg(re.msg);
+                        }
+                    }
+                })
+            }else{
+                $.ajax({
+                    url:"{:url('slider/editType')}",
+                    type:"post",
+                    data:data.field,
+                    success:function (re) {
+                        if (re.code === 13){
+                            layer.msg(re.msg,function () {
+                                window.location.href = "{:url('slider/typeList')}";
+                            })
+                        }else{
+                            layer.msg(re.msg);
+                        }
+                    }
+                })
+            }
+
+        })
+    })
+</script>
+{/block}
